@@ -2,9 +2,9 @@ const Place = require('../models/places.model')
 
 const placeFromPrice = async (req,res)=>{
     try{
-        const { startPrice, endPrice } = req.body;
+        const { startPrice, endPrice, country } = req.body;
 
-        const placeData = await Place.find({price:{$gt: startPrice || 0, $lt:Number(endPrice)}})
+        const placeData = await Place.find({price:{$gt: startPrice || 0, $lt:Number(endPrice)}, country});
 
         // console.log(placeData)
 
@@ -24,7 +24,7 @@ const placeFromPrice = async (req,res)=>{
 const getCountry=async (req,res) =>{
     const {country} = req.body;
     try{
-        const searchCountry = await Place.find({country:{$regex: "^" + country}}) 
+        const searchCountry = await Place.find({country: country}) 
         
         res.json({
             status:true,
