@@ -4,7 +4,7 @@ const placeFromPrice = async (req,res)=>{
     try{
         const { startPrice, endPrice, country } = req.body;
 
-        const placeData = await Place.find({price:{$gt: startPrice || 0, $lt:Number(endPrice)}, country});
+        const placeData = country?.length > 0 ? await Place.find({price:{$gt: startPrice || 0, $lt:Number(endPrice)}, country}) :  await Place.find({price:{$gt: startPrice || 0, $lt:Number(endPrice)}})
 
         // console.log(placeData)
 
