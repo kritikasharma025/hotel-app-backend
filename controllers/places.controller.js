@@ -1,4 +1,4 @@
-const Place = require('../models/places.model')
+const Place = require('../models/users.model')
 
 const placeFromPrice = async (req,res)=>{
     try{
