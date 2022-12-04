@@ -82,7 +82,33 @@ const login = async (req,res) => {
     }
 }
 
+const verifyToken = async (req,res) => {
+    let {authorization} = req.headers;
+    try{
+        if(!authorization || !authorization.startsWith("Bearer")){
+            res.status(401).json({
+                message:"Invalid Token"
+            })
+        }else{
+            const {id} = jwt.verify(authorization.split(" ")[1], process.env.JWT_SECRET);
+
+            const user = await User.findById(id)
+            res.json({
+                name:user.name,
+                email:user.email
+            })
+        }
+    }
+    catch(err){
+        res.status(err.status || 500).json({
+            status:false,
+            message: err.message || "Internal Server Error"
+        })
+    }
+}
+
 module.exports = {
     register,
-    login
+    login,
+    verifyToken
 }

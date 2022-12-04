@@ -1,11 +1,12 @@
 const userRouter = require("express").Router();
 const {
     register,
-    login
+    login,
+    verifyToken
 } = require("../controllers/auth.controller")
 
 userRouter.post("/register", register)
 userRouter.post("/login", login)
-
+userRouter.post("/verifyToken", verifyToken)
 
 module.exports = userRouter;
