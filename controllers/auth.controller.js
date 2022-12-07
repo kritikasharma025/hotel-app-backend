@@ -1,9 +1,28 @@
 const User = require("../models/users.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const nodemailer = require("nodemailer");
+const handlebar = require("handlebars")
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require("util");
+
+const readFile = promisify(fs.readFile)
 
 const register = async (req,res) => {
     const {name, email, password} = req.body;
+    let filePath = path.join(__dirname, "..", "static", "email1.html");
+    let htmlFile = await readFile(filePath, 'utf-8')
+    let transporter = nodemailer.createTransport({
+        host:process.env.HOST,
+        port:587,
+        secure:false,
+        service:"gmail",
+        auth:{
+            user:process.env.USER_EMAIL,
+            pass:process.enb.USER-PASS
+        }
+    })
     try{
         if(!name || !email || !password){
             res.status(409).json({
@@ -29,6 +48,29 @@ const register = async (req,res) => {
                     email: newUser.email
                 }
                 
+                let template = handlebar.compile(htmlFile);
+                const data = {
+                    username: newUser.name
+                }
+                let emailTemp = template(data)
+
+                try{
+                    let info = await transporter.sendMail({
+                        from: 'KRIMO <krimo.com>',
+                        to: newUser.email,
+                        subject:`Welcome ${newUser.name} || Krimo`,
+                        text:`Hi ${newUser.name}, your account has been succesfully created. Thanks!!`,
+                        html: emailTemp
+                    })
+                    console.log("Mail sent: ", info.messageId)
+                }
+                catch(err){
+                    res.status(err.status || 500).json({
+                        status:false,
+                        message: err.message || "Internal Server Error"
+                    })
+                }
+
                 res.json(formattedUser)
             }
         }
