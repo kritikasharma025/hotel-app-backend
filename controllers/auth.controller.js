@@ -95,7 +95,8 @@ const verifyToken = async (req,res) => {
             const user = await User.findById(id)
             res.json({
                 name:user.name,
-                email:user.email
+                email:user.email,
+                image: user.image
             })
         }
     }

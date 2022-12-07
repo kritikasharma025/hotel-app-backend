@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
         type:String, 
         min:5,
         max:30
+    },
+    image:{
+        type:String,
+        default:"https://res.cloudinary.com/disa7kv8f/image/upload/v1670397576/g9vlovpec6oraurppknz.jpg"
     }
 },{
     timestamps:true
